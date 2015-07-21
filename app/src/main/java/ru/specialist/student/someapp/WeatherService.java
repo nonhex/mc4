@@ -16,7 +16,6 @@ import ru.specialist.student.someapp.weather.CityWeather;
 
 public class WeatherService extends Service {
     private Handler handler;
-    ;
     private String city = "London";
     private Gson gson = new GsonBuilder().create();
     private WeatherAT weather_at;
@@ -37,8 +36,10 @@ public class WeatherService extends Service {
         l("onStartCommand");
         if (intent != null && intent.hasExtra("city")) {
             city = intent.getStringExtra("city");
-            retrive();
+        } else {
+            city = "London";
         }
+        retrive();
         return START_STICKY;
     }
 
@@ -55,7 +56,8 @@ public class WeatherService extends Service {
             @Override
             protected void onPostExecute(String info) {
                 l("info is: " + info);
-                EventBus.getDefault().post(gson.fromJson(info, CityWeather.class));
+                if (info != null)
+                    EventBus.getDefault().post(gson.fromJson(info, CityWeather.class));
                 super.onPostExecute(info);
                 handler.postDelayed(new Runnable() {
                     @Override

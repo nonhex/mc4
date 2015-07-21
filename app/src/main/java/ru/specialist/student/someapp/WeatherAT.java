@@ -14,8 +14,6 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import ru.specialist.student.someapp.weather.CityWeather;
-
 public class WeatherAT extends AsyncTask<String, String, String> {
 
     public WeatherAT() {
@@ -23,6 +21,8 @@ public class WeatherAT extends AsyncTask<String, String, String> {
 
     @Override
     protected String doInBackground(String... params) {
+        if (params == null || params.length == 0)
+            return null;
         String for_ = params[0];
         Log.d("MC4", "Daemons");
         HttpClient httpclient = new DefaultHttpClient();

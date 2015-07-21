@@ -23,7 +23,6 @@
         <receiver
             android:name=".BroadcasterOnBoot"
             android:enabled="true">
-            <!--<intent-filter android:name="android.content.Intent.ACTION_BOOT_COMPLETED"/>-->
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

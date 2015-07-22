@@ -49,7 +49,14 @@ public abstract class AFrag extends Fragment {
         weather_tv = (TextView) root.findViewById(R.id.ff_text_view);
         city_name = (TextView) root.findViewById(R.id.ff_text_input);
         EventBus.getDefault().register(this);
+        ((TextView) root.findViewById(R.id.txt_frag_class)).setText("Class: " + getClass().getSimpleName() + ", hash: " + hashCode());
         return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroyView();
     }
 
     public void onBtnClick(View r) {

@@ -6,11 +6,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.RelativeLayout;
 
 import de.greenrobot.event.EventBus;
 import ru.specialist.student.someapp.utils.http.HttpService;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends NextPrevFrags {
     @Override
     protected void onStart() {
         super.onStart();
@@ -30,6 +32,20 @@ public class MainActivity extends AppCompatActivity {
         Intent srv = new Intent(this, WeatherService.class);
         srv.putExtra("city", "Moscow");
         startService(srv);
+        addFragmentsTo(R.id.fragment, new FFrag0(), new FFrag1(), new FFrag2());
+        findViewById(R.id.btn_next).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                next_frag();
+            }
+        });
+        findViewById(R.id.btn_prev).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                prev_frag();
+            }
+        });
+//        (RelativeLayout)findViewById(R.id.rlayout)
     }
 
     @Override

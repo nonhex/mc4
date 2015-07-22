@@ -1,6 +1,9 @@
 package ru.specialist.student.someapp;
 
 import android.app.Service;
+import android.appwidget.AppWidgetManager;
+import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -22,6 +25,7 @@ import ru.specialist.student.someapp.utils.http.Request;
 import ru.specialist.student.someapp.weather.CityWeather;
 
 import ru.specialist.student.someapp.utils.http.HttpService;
+import ru.specialist.student.someapp.widget.WeatherWidgetBroadcast;
 
 public class WeatherService extends Service {
     private Gson gson = new GsonBuilder().create();
@@ -38,7 +42,7 @@ public class WeatherService extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(final Intent intent, int flags, int startId) {
         l("onStartCommand");
         String city;
         if (intent != null && intent.hasExtra("city")) {
@@ -54,6 +58,15 @@ public class WeatherService extends Service {
                         if (data != null) {
                             WeatherManager.saveWeather(data);
                             EventBus.getDefault().post(gson.fromJson(data, CityWeather.class));
+                            AppWidgetManager wp = AppWidgetManager.getInstance(getApplicationContext());
+                            ComponentName cn = new ComponentName(getApplicationContext(), WeatherWidgetBroadcast.class);
+                            int[] ids = wp.getAppWidgetIds(cn);
+                            if (ids != null && ids.length > 0) {
+                                Intent intent1 = new Intent();
+                                intent1.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+                                intent1.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                                sendBroadcast(intent1);
+                            }
                         }
                     }
                 });

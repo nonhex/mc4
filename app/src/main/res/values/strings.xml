@@ -3,4 +3,7 @@
     <string name="hello_world">Привет мир!</string>
     <string name="action_settings">Настройки</string>
     <string name="ff0_btn_0_title">Погода</string>
+    <string name="default_city">Moscow</string>
+    <string name="weather">Погода</string>
+    <string name="fragment_class_name">Fragment class name</string>
 </resources>

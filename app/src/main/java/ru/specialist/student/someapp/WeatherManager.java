@@ -5,6 +5,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -25,7 +26,7 @@ public class WeatherManager {
     private static Gson gson = new GsonBuilder().create();
 
     public static void saveWeather(String json) {
-        try (OutputStreamWriter osw = new OutputStreamWriter(App.ctx().openFileOutput(WEATHER_FILE, Context.MODE_APPEND))) {
+        try (OutputStreamWriter osw = new OutputStreamWriter(App.ctx().openFileOutput(WEATHER_FILE, Context.MODE_PRIVATE))) {
             osw.write(json + "\n");
             osw.flush();
             Toast.makeText(App.ctx(), "Weather log successfull writed", Toast.LENGTH_LONG).show();
@@ -44,7 +45,7 @@ public class WeatherManager {
             if (data.length() > 0) {
                 return gson.fromJson(data, CityWeather.class);
             }
-        } catch (IOException e) {
+        } catch (IOException | JsonSyntaxException e) {
             e.printStackTrace();
         }
         return null;

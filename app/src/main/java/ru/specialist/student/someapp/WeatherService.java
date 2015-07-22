@@ -5,9 +5,16 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 import de.greenrobot.event.EventBus;
 import ru.specialist.student.someapp.utils.http.OnSuccess;
@@ -44,8 +51,32 @@ public class WeatherService extends Service {
                 new OnSuccess() {
                     @Override
                     public void run(String data) {
-                        if (data != null)
+                        if (data != null) {
+                            File file = new File(getExternalFilesDir("") + File.separator + "weather.log");
+                            if (!file.exists()) {
+                                try {
+                                    if (file.createNewFile()) {
+                                        l("We have new weather log file.");
+                                    } else {
+                                        l("Some was wrong :(");
+                                    }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            OutputStreamWriter osw = null;
+                            try {
+                                osw = new OutputStreamWriter(new FileOutputStream(file));
+                                osw.write(data + "\n");
+                                osw.flush();
+                                osw.close();
+                                Toast.makeText(getApplicationContext(), "Weather log successfull writed to " + file.getAbsoluteFile(), Toast.LENGTH_LONG).show();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                l(e.getLocalizedMessage());
+                            }
                             EventBus.getDefault().post(gson.fromJson(data, CityWeather.class));
+                        }
                     }
                 });
         return START_STICKY;

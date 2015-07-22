@@ -52,25 +52,10 @@ public class WeatherService extends Service {
                     @Override
                     public void run(String data) {
                         if (data != null) {
-                            File file = new File(getExternalFilesDir("") + File.separator + "weather.log");
-                            if (!file.exists()) {
-                                try {
-                                    if (file.createNewFile()) {
-                                        l("We have new weather log file.");
-                                    } else {
-                                        l("Some was wrong :(");
-                                    }
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            OutputStreamWriter osw = null;
-                            try {
-                                osw = new OutputStreamWriter(new FileOutputStream(file));
+                            try (OutputStreamWriter osw = new OutputStreamWriter(openFileOutput("weather.log", MODE_APPEND))) {
                                 osw.write(data + "\n");
                                 osw.flush();
-                                osw.close();
-                                Toast.makeText(getApplicationContext(), "Weather log successfull writed to " + file.getAbsoluteFile(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "Weather log successfull writed", Toast.LENGTH_LONG).show();
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 l(e.getLocalizedMessage());

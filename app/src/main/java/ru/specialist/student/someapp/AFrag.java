@@ -3,6 +3,7 @@ package ru.specialist.student.someapp;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -11,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import java.nio.channels.AsynchronousCloseException;
 
 import de.greenrobot.event.EventBus;
 import ru.specialist.student.someapp.weather.CityWeather;
@@ -64,14 +67,38 @@ public abstract class AFrag extends Fragment {
         getActivity().startService(wint);
     }
 
-    public void onEvent(CityWeather weather) {
-        if (weather != null && weather.main != null)
-            weather_tv.setText("Min: " + weather.main.temp_min + ", Max: " + weather.main.temp_max);
-        btn_get_weather.setEnabled(true);
-        city_name.setEnabled(true);
-        if (dialog != null) {
-            dialog.dismiss();
-            dialog = null;
+    class GetWeather extends AsyncTask<Void, Void, CityWeather> {
+
+        @Override
+        protected CityWeather doInBackground(Void... objects) {
+            return WeatherManager.getWeather();
         }
+
+        @Override
+        protected void onPostExecute(CityWeather weather) {
+            if (weather != null && weather.main != null)
+                weather_tv.setText("Min: " + weather.main.temp_min + ", Max: " + weather.main.temp_max);
+            btn_get_weather.setEnabled(true);
+            city_name.setEnabled(true);
+            if (dialog != null) {
+                dialog.dismiss();
+                dialog = null;
+            }
+        }
+    }
+
+    private GetWeather task;
+
+    public void onEvent(CityWeather weather) {
+        if (task == null || task.getStatus() == AsyncTask.Status.FINISHED) {
+            task = new GetWeather();
+            task.execute();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        onEvent(null);
     }
 }

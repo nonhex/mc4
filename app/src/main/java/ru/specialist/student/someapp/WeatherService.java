@@ -52,14 +52,7 @@ public class WeatherService extends Service {
                     @Override
                     public void run(String data) {
                         if (data != null) {
-                            try (OutputStreamWriter osw = new OutputStreamWriter(openFileOutput("weather.log", MODE_APPEND))) {
-                                osw.write(data + "\n");
-                                osw.flush();
-                                Toast.makeText(getApplicationContext(), "Weather log successfull writed", Toast.LENGTH_LONG).show();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                                l(e.getLocalizedMessage());
-                            }
+                            WeatherManager.saveWeather(data);
                             EventBus.getDefault().post(gson.fromJson(data, CityWeather.class));
                         }
                     }

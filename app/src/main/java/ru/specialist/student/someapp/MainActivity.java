@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import de.greenrobot.event.EventBus;
+import ru.specialist.student.someapp.utils.http.HttpService;
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -54,5 +55,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        HttpService.destroy();
     }
 }

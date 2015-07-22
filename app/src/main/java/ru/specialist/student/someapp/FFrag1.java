@@ -13,7 +13,7 @@ public class FFrag1 extends AFrag {
 
     @Override
     public int layout_id() {
-        return R.layout.ffrag0;
+        return R.layout.ffrag1;
     }
     @Nullable
     @Override

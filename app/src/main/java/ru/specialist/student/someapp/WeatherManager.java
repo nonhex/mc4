@@ -25,28 +25,34 @@ public class WeatherManager {
     public static final String WEATHER_FILE = "weather.log";
     private static Gson gson = new GsonBuilder().create();
 
+    private static final Object stick = new Object();
+
     public static void saveWeather(String json) {
-        try (OutputStreamWriter osw = new OutputStreamWriter(App.ctx().openFileOutput(WEATHER_FILE, Context.MODE_PRIVATE))) {
-            osw.write(json + "\n");
-            osw.flush();
-            Toast.makeText(App.ctx(), "Weather log successfull writed", Toast.LENGTH_LONG).show();
-        } catch (IOException e) {
-            e.printStackTrace();
+        synchronized (stick) {
+            try (OutputStreamWriter osw = new OutputStreamWriter(App.ctx().openFileOutput(WEATHER_FILE, Context.MODE_PRIVATE))) {
+                osw.write(json + "\n");
+                osw.flush();
+                Toast.makeText(App.ctx(), "Weather log successfull writed", Toast.LENGTH_LONG).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public static CityWeather getWeather() {
-        try {
-            FileInputStream fis = App.ctx().openFileInput(WEATHER_FILE);
-            BufferedReader br = new BufferedReader(new InputStreamReader(fis));
-            String line, data = "";
-            while ((line = br.readLine()) != null)
-                data += line;
-            if (data.length() > 0) {
-                return gson.fromJson(data, CityWeather.class);
+        synchronized (stick) {
+            try {
+                FileInputStream fis = App.ctx().openFileInput(WEATHER_FILE);
+                BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+                String line, data = "";
+                while ((line = br.readLine()) != null)
+                    data += line;
+                if (data.length() > 0) {
+                    return gson.fromJson(data, CityWeather.class);
+                }
+            } catch (IOException | JsonSyntaxException e) {
+                e.printStackTrace();
             }
-        } catch (IOException | JsonSyntaxException e) {
-            e.printStackTrace();
         }
         return null;
     }

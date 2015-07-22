@@ -18,4 +18,5 @@ public class App extends Application {
     public static Context ctx() {
         return context;
     }
+
 }

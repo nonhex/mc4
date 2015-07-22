@@ -46,6 +46,9 @@ public class MainActivity extends NextPrevFrags {
             }
         });
 //        (RelativeLayout)findViewById(R.id.rlayout)
+
+        Intent geoIntent = new Intent(this, GeoService.class);
+        startService(geoIntent);
     }
 
     @Override

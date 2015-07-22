@@ -34,7 +34,7 @@ public class NextPrevFrags extends AppCompatActivity {
             frag_ind = 0;
         }
         FragmentTransaction ft = fm.beginTransaction();
-        ft.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
+        ft.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
         ft.replace(fragment_place_id, frags[frag_ind]);
         ft.addToBackStack("ffrag" + frag_ind);
         ft.commit();
@@ -47,7 +47,7 @@ public class NextPrevFrags extends AppCompatActivity {
             frag_ind = (byte) (frags.length - 1);
         }
         FragmentTransaction ft = fm.beginTransaction();
-        ft.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+        ft.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
         ft.replace(fragment_place_id, frags[frag_ind]);
         ft.addToBackStack("ffrag" + frag_ind);
         ft.commit();

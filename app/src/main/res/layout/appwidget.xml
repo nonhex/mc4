@@ -9,14 +9,15 @@
         android:layout_height="fill_parent"
         android:orientation="vertical">
 
-        <TextClock
+        <TextView
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
+            android:layout_height="wrap_content"
+            android:id="@+id/weather"/>
 
         <Button
             android:id="@+id/btn_wdgt"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:text="Btn" />
     </LinearLayout>
 </FrameLayout>
